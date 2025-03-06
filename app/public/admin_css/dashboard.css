@@ -1,0 +1,88 @@
+body {
+    font-family: Arial, sans-serif;
+    direction: rtl;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+.main-content {
+    max-width: 800px;
+    margin: 20px auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+header {
+    background-color: #4CAF50;
+    color: white;
+    padding: 20px;
+    border-radius: 5px;
+}
+
+.statistics {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 30px;
+}
+
+.stat-item {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    flex: 1;
+}
+
+.stat-item h3 {
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.stat-item p {
+    font-size: 24px;
+    color: #4CAF50;
+}
+
+.recent-activity {
+    margin-top: 50px;
+}
+
+.recent-activity h2 {
+    margin-bottom: 20px;
+}
+
+.recent-activity ul {
+    list-style: none;
+    padding: 0;
+}
+
+.recent-activity ul li {
+    background-color: #fff;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.back-button {
+    margin-top: 30px;
+}
+
+.btn {
+    display: inline-block;
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.btn:hover {
+    background-color: #45a049;
+}

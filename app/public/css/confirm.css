@@ -1,0 +1,91 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f4f4f9;
+}
+
+.product-details {
+    background: #fff;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 100%;
+    max-width: 400px;
+    box-sizing: border-box;
+}
+
+.product-details img {
+    border-radius: 10px;
+    margin-bottom: 15px;
+    max-width: 88%;
+    height: auto;
+}
+
+.product-details h1 {
+    font-size: 1.8rem;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.product-details h2 {
+    font-size: 1.5rem;
+    color: #555;
+    margin-bottom: 15px;
+}
+
+.product-details p {
+    font-size: 1rem;
+    margin-bottom: 10px;
+    color: #666;
+}
+
+.product-details form {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.product-details label {
+    font-size: 1rem;
+    display: block;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.product-details input[type="number"] {
+    width: calc(100% - 20px);
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+    text-align: center;
+}
+
+.product-details button {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 15px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: calc(100% - 20px);
+    transition: background-color 0.3s ease;
+}
+
+.product-details button:hover {
+    background-color: #0056b3;
+}
+
+#total-price {
+    font-weight: bold;
+    color: #333;
+}
