@@ -28,7 +28,6 @@
                     <th>السعر</th>
                     <th>المخزون</th>
                     <th>الوصف</th>
-                    <th>الصورة</th>
                     <th>تاريخ الإضافة</th>
                     <th>الإجراءات</th>
                 </tr>
@@ -41,7 +40,7 @@
                         <td><?php echo htmlspecialchars($product['price']); ?> $</td>
                         <td><?php echo htmlspecialchars($product['stock']); ?></td>
                         <td><?php echo htmlspecialchars($product['description']); ?></td>
-                        <td><img src="/project/uploads/<?php echo htmlspecialchars($product['image']); ?>" width="50"></td>
+                        
                         <td><?php echo date("d M Y", strtotime($product['created_at'])); ?></td>
                         <td>
                             <form method="POST" action="/project/admin/delete-product" onsubmit="return confirm('هل أنت متأكد من حذف هذا المنتج؟');">

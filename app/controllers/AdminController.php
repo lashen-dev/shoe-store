@@ -211,24 +211,49 @@ class AdminController {
             $price = $_POST['price'];
             $stock = $_POST['stock'];
             $description = $_POST['description'];
+            
 
-            // معالجة رفع الصورة
-            $image = '';
+
+            $image = '';  
             if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
-                $image = time() . '_' . $_FILES['image']['name'];
-                move_uploaded_file($_FILES['image']['tmp_name'], 'uploads/' . $image);
+                $uploadDir = 'app/public/images/';
+                $image = time() . '_' . basename($_FILES['image']['name']);
+                $targetFile = $uploadDir . $image;
+                
+                // التحقق من الامتداد
+                $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+                $fileExtension = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
+            
+                // التحقق من نوع الملف
+                $allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+                $fileMimeType = mime_content_type($_FILES['image']['tmp_name']);
+            
+                if (in_array($fileExtension, $allowedExtensions) && in_array($fileMimeType, $allowedMimeTypes)) {
+                    if (move_uploaded_file($_FILES['image']['tmp_name'], $targetFile)) {
+                        // حفظ مسار الصورة في قاعدة البيانات
+                        $imagePath = 'app/public/images/' . $image;
+                    }
+                } else {
+                    $_SESSION['error'] = "نوع الملف غير مدعوم. يُرجى رفع صورة بصيغة JPG أو PNG أو GIF أو WebP فقط.";
+                    header('Location: /project/admin/addProduct');
+                    exit;
+                }
             }
-
+            
             $productModel = new Product($this->pdo);
-            if ($productModel->addProduct($name, $price, $stock, $description, $image)) {
+            if ($productModel->addProduct($name, $price, $stock, $description, $imagePath)) {
                 $_SESSION['success'] = "تمت إضافة المنتج بنجاح.";
             } else {
                 $_SESSION['error'] = "حدث خطأ أثناء إضافة المنتج.";
             }
-
+            
             header('Location: /project/admin/products');
             exit;
+                
+
+            
         }
     }
 }
+
 ?>

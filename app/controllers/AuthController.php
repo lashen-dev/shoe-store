@@ -41,56 +41,83 @@ class AuthController {
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
-        
-        
+    
+        // عدد المحاولات المسموح بها
+        $maxAttempts = 5;
+        $lockoutTime = 10 * 60; // 10 دقائق بالثواني
+    
+        // التحقق من المحاولات السابقة
+        if (isset($_SESSION['login_attempts']) && $_SESSION['login_attempts'] >= $maxAttempts) {
+            $remainingTime = ($_SESSION['lockout_time'] + $lockoutTime) - time();
+            if ($remainingTime > 0) {
+                $_SESSION['flash_errors'][] = "تم حظر تسجيل الدخول مؤقتًا. يرجى المحاولة بعد " . ceil($remainingTime / 60) . " دقيقة.";
+                header('Location: /project/login');
+                exit();
+            } else {
+                // إعادة تعيين العداد بعد انتهاء الحظر
+                unset($_SESSION['login_attempts']);
+                unset($_SESSION['lockout_time']);
+            }
+        }
+    
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $this->checkCsrfToken($_POST['csrf_token'] ?? '');
             $email = filter_var(trim($_POST['email'] ?? ''), FILTER_SANITIZE_EMAIL);
             $password = trim($_POST['password'] ?? '');
-
+    
             $errors = [];
     
             if (empty($email) || empty($password)) {
                 $errors[] = 'يرجى إدخال البريد الإلكتروني وكلمة المرور معاً.';
             }
     
-            // التحقق من صحة البريد الإلكتروني (بشرط أن لا يكون فارغًا)
             if (!empty($email) && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
                 $errors[] = 'عنوان البريد الإلكتروني غير صالح.';
             }
     
-            // إذا كانت هناك أخطاء، يتم حفظها وإعادة التوجيه
             if (!empty($errors)) {
                 $_SESSION['flash_errors'] = $errors;
                 header('Location: /project/login', true, 303);
                 exit();
-
             }
     
             global $pdo;
             $userModel = new User($pdo);
-            // محاولة تسجيل الدخول
             $user = $userModel->login($email, $password);
     
             if (!$user) {
-                $_SESSION['flash_errors'][] = 'تسجيل دخول غير ناجح يرجي التاكد من البيانات';
+                // زيادة عدد المحاولات الفاشلة
+                $_SESSION['login_attempts'] = ($_SESSION['login_attempts'] ?? 0) + 1;
+    
+                // إذا وصلت المحاولات إلى الحد الأقصى، تفعيل الحظر
+                if ($_SESSION['login_attempts'] >= $maxAttempts) {
+                    $_SESSION['lockout_time'] = time();
+                    $_SESSION['flash_errors'][] = "تم حظر تسجيل الدخول لمدة 10 دقائق بسبب المحاولات الفاشلة المتكررة.";
+                } else {
+                    $_SESSION['flash_errors'][] = 'تسجيل دخول غير ناجح. يرجى التحقق من البيانات.';
+                }
+    
                 header('Location: /project/login');
                 exit();
             }
+    
+            // تسجيل الدخول الناجح - إعادة تعيين المحاولات
+            unset($_SESSION['login_attempts']);
+            unset($_SESSION['lockout_time']);
     
             // حفظ بيانات المستخدم في الجلسة
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['username'] = $user['name'];
             $_SESSION['email'] = $user['email'];
-            $_SESSION['role'] = $user['role']; // حفظ دور المستخدم في الجلسة
+            $_SESSION['role'] = $user['role'];
     
             header('Location: /project', true, 303);
             exit();
         }
     
-        // عرض صفحة تسجيل الدخول
         require 'app/views/auth/login.php';
     }
+    
     
 
     public function register() {
